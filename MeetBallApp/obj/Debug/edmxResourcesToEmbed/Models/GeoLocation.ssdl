@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="GeoLocationData.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="GeoLocationAttendees">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GeoLocationID" Type="int" Nullable="false" />
+    <Property Name="UserID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="GeoLocations">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Address" Type="varchar" MaxLength="100" />
+    <Property Name="City" Type="varchar" MaxLength="100" />
+    <Property Name="State" Type="varchar" MaxLength="100" />
+    <Property Name="Zip" Type="varchar" MaxLength="50" />
+    <Property Name="GPXWKT" Type="varchar" MaxLength="50" />
+    <Property Name="CreateDate" Type="datetime" />
+    <Property Name="Description" Type="varchar" MaxLength="4000" />
+    <Property Name="StartDate" Type="datetime" />
+    <Property Name="EndDate" Type="datetime" />
+    <Property Name="Name" Type="varchar" MaxLength="100" />
+    <Property Name="GeoLocationEvent" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FullName" Type="nchar" MaxLength="10" />
+    <Property Name="EmailAddress" Type="nchar" MaxLength="10" />
+    <Property Name="Phone" Type="varchar" MaxLength="50" />
+    <Property Name="Message" Type="varchar" MaxLength="4000" />
+  </EntityType>
+  <Association Name="FK_GeoLocationAttendees_GeoLocations">
+    <End Role="GeoLocations" Type="Self.GeoLocations" Multiplicity="1" />
+    <End Role="GeoLocationAttendees" Type="Self.GeoLocationAttendees" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GeoLocations">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="GeoLocationAttendees">
+        <PropertyRef Name="GeoLocationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GeoLocationAttendees_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="GeoLocationAttendees" Type="Self.GeoLocationAttendees" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="GeoLocationAttendees">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="GeoLocationDataStoreContainer">
+    <EntitySet Name="GeoLocationAttendees" EntityType="Self.GeoLocationAttendees" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="GeoLocations" EntityType="Self.GeoLocations" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_GeoLocationAttendees_GeoLocations" Association="Self.FK_GeoLocationAttendees_GeoLocations">
+      <End Role="GeoLocations" EntitySet="GeoLocations" />
+      <End Role="GeoLocationAttendees" EntitySet="GeoLocationAttendees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GeoLocationAttendees_Users" Association="Self.FK_GeoLocationAttendees_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="GeoLocationAttendees" EntitySet="GeoLocationAttendees" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

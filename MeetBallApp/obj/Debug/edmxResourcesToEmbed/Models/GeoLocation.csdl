@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="GeoLocationData" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="GeoLocationAttendee">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GeoLocationID" Type="Int32" Nullable="false" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="GeoLocation" Relationship="Self.FK_GeoLocationAttendees_GeoLocations" FromRole="GeoLocationAttendees" ToRole="GeoLocations" />
+    <NavigationProperty Name="User" Relationship="Self.FK_GeoLocationAttendees_Users" FromRole="GeoLocationAttendees" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="GeoLocation">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Address" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="City" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="State" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Zip" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="GPXWKT" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="Description" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+    <Property Name="StartDate" Type="DateTime" Precision="3" />
+    <Property Name="EndDate" Type="DateTime" Precision="3" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="GeoLocationAttendees" Relationship="Self.FK_GeoLocationAttendees_GeoLocations" FromRole="GeoLocations" ToRole="GeoLocationAttendees" />
+    <Property Name="GeoLocationEvent" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FullName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="EmailAddress" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Message" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="GeoLocationAttendees" Relationship="Self.FK_GeoLocationAttendees_Users" FromRole="Users" ToRole="GeoLocationAttendees" />
+  </EntityType>
+  <Association Name="FK_GeoLocationAttendees_GeoLocations">
+    <End Role="GeoLocations" Type="Self.GeoLocation" Multiplicity="1" />
+    <End Role="GeoLocationAttendees" Type="Self.GeoLocationAttendee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GeoLocations">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="GeoLocationAttendees">
+        <PropertyRef Name="GeoLocationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GeoLocationAttendees_Users">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="GeoLocationAttendees" Type="Self.GeoLocationAttendee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="GeoLocationAttendees">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="GeoLocationDb" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="GeoLocationAttendees" EntityType="Self.GeoLocationAttendee" />
+    <EntitySet Name="GeoLocations" EntityType="Self.GeoLocation" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_GeoLocationAttendees_GeoLocations" Association="Self.FK_GeoLocationAttendees_GeoLocations">
+      <End Role="GeoLocations" EntitySet="GeoLocations" />
+      <End Role="GeoLocationAttendees" EntitySet="GeoLocationAttendees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GeoLocationAttendees_Users" Association="Self.FK_GeoLocationAttendees_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="GeoLocationAttendees" EntitySet="GeoLocationAttendees" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
